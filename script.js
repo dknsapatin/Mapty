@@ -140,8 +140,8 @@ class App {
       const elevation = +inputElevation.value;
 
       if (
-        !validInputs(distance, duration, cadence) ||
-        !allPositives(distance, duration, cadence)
+        !validInputs(distance, duration, elevation) ||
+        !allPositives(distance, duration)
       )
         return alert('Input have to be a positive number');
     }
