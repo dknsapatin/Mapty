@@ -55,6 +55,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class App {
   #map;
   #mapEvent;
+  #workouts = [];
   constructor() {
     this._getPosition();
 
@@ -121,6 +122,9 @@ class App {
     // Value are strings so add "+" to convert to number
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
+    // Render workout on map as marker
+    const { lat, lng } = this.#mapEvent.latlng;
+    let workout;
 
     // If activity is running, create running object
     if (type === 'running') {
@@ -134,6 +138,9 @@ class App {
         !allPositives(distance, duration, cadence)
       )
         return alert('Input have to be a positive number');
+
+      workout = new Running([lat, lng], distance, duration, cadence);
+      this.#workouts.push(workout);
     }
     // If activity is cycling, create running cycling
     if (type === 'cycling') {
@@ -144,13 +151,27 @@ class App {
         !allPositives(distance, duration)
       )
         return alert('Input have to be a positive number');
+      workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     // Add new object to workout array
+    this.#workouts.push(workout);
 
     // Render workout on map as marker
-    const { lat, lng } = this.#mapEvent.latlng;
+    this.renderWorkoutMarker(workout);
+
+    // Render workout on list
+
+    // Hide form + clear input fields
+    inputDistance.value =
+      inputDuration.value =
+      inputElevation.value =
+      inputCadence.value =
+        '';
+  }
+
+  renderWorkoutMarker(workout) {
     //   Set const coords inside the marker
-    L.marker([lat, lng])
+    L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -158,22 +179,11 @@ class App {
           minWidth: 150,
           autoClose: false,
           closeOnClick: false,
-          className: 'running-popup',
+          className: `${type}-popup`,
         })
       )
-      .setPopupContent('Workout')
+      .setPopupContent(workout.distance)
       .openPopup();
-
-    // Render workout on list
-
-    // Hide form + clear input fields
-
-    //Clear input fields
-    inputDistance.value =
-      inputDuration.value =
-      inputElevation.value =
-      inputCadence.value =
-        '';
   }
 }
 
