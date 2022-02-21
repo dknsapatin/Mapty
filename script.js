@@ -117,6 +117,19 @@ class App {
     inputDistance.focus();
   }
 
+  _hideForm() {
+    // Empty inputs
+    inputDistance.value =
+      inputDuration.value =
+      inputElevation.value =
+      inputCadence.value =
+        '';
+
+    form.style.display = 'none';
+    form.classList.add('hidden');
+    setTimeout(() => ((form.style.display = 'grid'), 1000));
+  }
+
   // Toggle the elevation from cadence to elevation method
   _toggleElevationField() {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
@@ -176,11 +189,7 @@ class App {
     this._renderWorkout(workout);
 
     // Hide form + clear input fields-----------------------------------------
-    inputDistance.value =
-      inputDuration.value =
-      inputElevation.value =
-      inputCadence.value =
-        '';
+    this._hideForm();
   }
 
   _renderWorkoutMarker(workout) {
