@@ -289,7 +289,6 @@ class App {
     const workout = this.#workouts.find(
       work => work.id === workoutEl.dataset.id
     );
-    console.log(workout);
 
     // Find the workout using the coordinates
     this.#map.setView(workout.coords, this.#mapZoomLevel, {
@@ -310,7 +309,6 @@ class App {
   // Getting data and parsing it. (Opposite of stringify is parsing)
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
-    console.log(data);
 
     if (!data) return;
 
@@ -320,6 +318,12 @@ class App {
     this.#workouts.forEach(work => {
       this._renderWorkout(work);
     });
+  }
+
+  // Can reset local storage by submitting app.reset() inside the console.
+  reset() {
+    localStorage.removeItem('workouts');
+    location.reload();
   }
 }
 
