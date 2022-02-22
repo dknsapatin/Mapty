@@ -300,7 +300,7 @@ class App {
     });
 
     // using the public interface
-    workout.click();
+    // workout.click();
   }
 
   // Calling method to set each workout to local storage
