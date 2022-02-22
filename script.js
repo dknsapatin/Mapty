@@ -75,7 +75,11 @@ class App {
   #workouts = [];
   #mapZoomLevel = 13;
   constructor() {
+    // Get user's position
     this._getPosition();
+    // Get data from local storage;
+    this._getLocalStorage();
+    // attach event handlers
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField.bind(this));
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
@@ -113,6 +117,11 @@ class App {
 
     // "EventListener" or on  looking for a click event.
     this.#map.on('click', this._showForm.bind(this));
+
+    // Render the markers every reload
+    this.#workouts.forEach(work => {
+      this._renderWorkoutMarker(work);
+    });
   }
   // Show the form method-------------------------------------------------
   _showForm(mapE) {
@@ -194,6 +203,9 @@ class App {
 
     // Hide form + clear input fields-----------------------------------------
     this._hideForm();
+
+    // Set local storage to all workouts
+    this._setLocalStorage();
   }
 
   _renderWorkoutMarker(workout) {
@@ -289,6 +301,25 @@ class App {
 
     // using the public interface
     workout.click();
+  }
+
+  // Calling method to set each workout to local storage
+  _setLocalStorage() {
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+  // Getting data and parsing it. (Opposite of stringify is parsing)
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem('workouts'));
+    console.log(data);
+
+    if (!data) return;
+
+    this.#workouts = data;
+
+    // Render to every time it reloads
+    this.#workouts.forEach(work => {
+      this._renderWorkout(work);
+    });
   }
 }
 
